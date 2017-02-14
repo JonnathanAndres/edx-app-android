@@ -864,11 +864,11 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 NetworkUtil.isConnected(getContext())) {
             PrefManager.UserPrefManager userPrefs = new PrefManager.UserPrefManager(MainApplication.application);
             final float appRating = userPrefs.getAppRating();
-            // If user has not given rating yet, ask for rating
-            if (appRating < 0.0f) {
+            // If user has not given rating yet, open dialog
+            // consider not rated if rating is 0 or less (default is -1)
+            if (appRating <= 0.0f) {
                 showRatingDialog();
             } else if (appRating <= 3.0f) {
-                // If user rated <=3
                 try {
                     Version oldVersion = new Version(userPrefs.getVersionWhenLastRated());
                     Version curVersion = new Version(BuildConfig.VERSION_NAME);
@@ -877,7 +877,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         showRatingDialog();
                     }
                 } catch (ParseException e) {
-                    /** build version number doesn't correspond to the schema, its a build
+                    /** Build version number doesn't correspond to the schema, its a build
                      configuration error **/
                     logger.error(e, true);
                 }

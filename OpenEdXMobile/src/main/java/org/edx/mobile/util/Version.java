@@ -144,9 +144,8 @@ public class Version implements Comparable<Version> {
     }
 
     /**
-     * Compares this version to the specified version to determine if
-     * minor versions difference between both is greater than the
-     * specified value.
+     * Compares this version to the specified version to determine if minor versions
+     * difference between both is greater than the or equal to the specified value.
      *
      * @param otherVersion The version to compare to this instance.
      * @param minorVersionsDiff Value difference to compare between versions.

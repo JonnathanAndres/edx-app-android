@@ -1,13 +1,13 @@
 package org.edx.mobile.view.dialog;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 
@@ -16,7 +16,9 @@ import com.google.inject.Inject;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.databinding.FragmentDialogRatingBinding;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.AppUpdateUtils;
 import org.edx.mobile.view.Router;
 
 import roboguice.fragment.RoboDialogFragment;
@@ -26,7 +28,8 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     @Inject
     private Router mRouter;
     private AlertDialog mAlertDialog;
-    private RatingBar mRatingBar;
+    @NonNull
+    private FragmentDialogRatingBinding binding;
 
     public static RatingDialogFragment newInstance() {
         return new RatingDialogFragment();
@@ -34,10 +37,12 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View view = inflater.inflate(R.layout.fragment_dialog_rating, null);
-        mRatingBar = (RatingBar) view.findViewById(R.id.ratingBar);
-        mRatingBar.setOnRatingBarChangeListener(this);
+        binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(),
+                R.layout.fragment_dialog_rating, null, false);
+        binding.ratingBar.setOnRatingBarChangeListener(this);
+        final Resources res = getResources();
+        binding.tvDescription.setText(String.format(res.getString(R.string.rating_dialog_message),
+                res.getString(R.string.app_name)));
         mAlertDialog = new AlertDialog.Builder(getContext())
                 .setPositiveButton(getString(R.string.label_submit), new DialogInterface.OnClickListener() {
                     @Override
@@ -46,7 +51,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
-                .setView(view)
+                .setView(binding.getRoot())
                 .setCancelable(true)
                 .create();
         mAlertDialog.setOnShowListener(this);
@@ -55,20 +60,19 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
 
     @Override
     public void onShow(DialogInterface dialog) {
-        if (mRatingBar.getRating() <= 0.0f) {
+        if (binding.ratingBar.getRating() <= 0.0f) {
             mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         }
     }
 
     public void submit() {
         final Dialog dialog = getDialog();
-        final RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.ratingBar);
         // Persist rating and current version name
         PrefManager.UserPrefManager userPrefs = new PrefManager.UserPrefManager(MainApplication.application);
-        userPrefs.setAppRating(ratingBar.getRating());
+        userPrefs.setAppRating(binding.ratingBar.getRating());
         userPrefs.setVersionWhenLastRated(BuildConfig.VERSION_NAME);
         // Next action
-        if (ratingBar.getRating() <=3 ) {
+        if (binding.ratingBar.getRating() <=3 ) {
             showFeedbackDialog(getActivity());
         } else {
             showRateTheAppDialog();
@@ -93,14 +97,16 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     }
 
     public void showRateTheAppDialog() {
+        final Resources res = getResources();
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.rate_app_dialog_title);
-        builder.setMessage(R.string.rate_app_dialog_message);
+        builder.setMessage(String.format(res.getString(R.string.rate_app_dialog_message),
+                res.getString(R.string.app_name)));
         builder.setPositiveButton(R.string.label_rate_the_app, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Open app in market
-                mRouter.openAppPageInPlayStore(((Dialog) dialog).getContext());
+                // Open app in store for rating
+                AppUpdateUtils.openAppInAppStore(((Dialog) dialog).getContext());
             }
         });
         builder.setNegativeButton(R.string.label_maybe_later, null);

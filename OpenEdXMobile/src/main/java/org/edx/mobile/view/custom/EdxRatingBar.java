@@ -17,28 +17,27 @@ public class EdxRatingBar extends RatingBar {
 
     public EdxRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public EdxRatingBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
     public EdxRatingBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public EdxRatingBar(Context context) {
         super(context);
+        init();
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        customizeTheme();
-    }
-
-    public void customizeTheme() {
+    public void init() {
+        // Change colors of stars
         LayerDrawable stars = (LayerDrawable) this.getProgressDrawable();
         stars.getDrawable(0).setColorFilter(UNSELECTED_STAR_COLOR, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(SELECTED_STAR_COLOR_DARK, PorterDuff.Mode.SRC_ATOP);

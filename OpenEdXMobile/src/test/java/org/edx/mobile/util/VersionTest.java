@@ -1,14 +1,20 @@
 package org.edx.mobile.util;
 
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 /**
  * Tests for verifying implementation correctness of {@link Version}.
  */
+@RunWith(Enclosed.class)
 public class VersionTest {
     /**
      * Verify that a new instance created with a two-dot release string (x.x.x) is parsed
@@ -150,33 +156,49 @@ public class VersionTest {
     }
 
     /**
-     * Verify that the {@link Version#isNMinorVersionsDiff(Version, int)} method returns true
-     * if passed another instance with greater or equal minor versions difference than the specified
-     * value.
-     */
-    @Test
-    public void testIsNMinorVersionsDiff_withGreaterOrEqualDiff_isTrue() throws ParseException {
-        final Version version = new Version("2.2.9");
-        assertThat(version.isNMinorVersionsDiff(new Version("2.0.1"), 2)).isEqualTo(true);
-        assertThat(version.isNMinorVersionsDiff(new Version("2.4.9"), 2)).isEqualTo(true);
-        assertThat(version.isNMinorVersionsDiff(new Version("2.4.1"), 2)).isEqualTo(true);
-        assertThat(version.isNMinorVersionsDiff(new Version("2.8.0"), 2)).isEqualTo(true);
-        assertThat(version.isNMinorVersionsDiff(new Version("3.2.9"), 2)).isEqualTo(true);
-        assertThat(version.isNMinorVersionsDiff(new Version("3.0"), 2)).isEqualTo(true);
-        assertThat(version.isNMinorVersionsDiff(new Version("2"), 2)).isEqualTo(true);
-        assertThat(version.isNMinorVersionsDiff(new Version("4"), 2)).isEqualTo(true);
-    }
+     * Parameterize test cases class for {@link Version#isNMinorVersionsDiff(Version, int)} method,
+     * method should return true if passed another instance with greater or equal minor versions
+     * difference than the specified value.
+     * */
+    @RunWith(Parameterized.class)
+    public static class ParameterizedTest_isNMinorVersionsDiff {
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    // true test cases
+                    {"2.3.6", "2.5.6", 2, true},
+                    {"2.5.6", "2.3.6", 2, true},
+                    {"2.5.6", "2.5.6", 0, true},
+                    {"2.5.6", "2.1.6", 4, true},
+                    {"2.5.6", "2.9.6", 4, true},
+                    {"2.5.6", "3.5.6", 4, true},
+                    {"2.2.0", "2", 2, true},
+                    {"2.2.0", "3", 4, true},
+                    // false test cases
+                    {"2.2.5", "2.2.5", 2, false},
+                    {"2.2.5", "2.3.5", 2, false},
+                    {"2.2.5", "2.5.5", 4, false},
+                    {"2.1.5", "2", 2, false},
+            });
+        }
 
-    /**
-     * Verify that the {@link Version#isNMinorVersionsDiff(Version, int)} method returns false
-     * if passed another instance with less minor versions difference than the specified value.
-     */
-    @Test
-    public void testIsNMinorVersionsDiff_withLessDiff_isFalse() throws ParseException {
-        final Version version = new Version("2.2.5");
-        assertThat(version.isNMinorVersionsDiff(new Version("2.2.5"), 2)).isEqualTo(false);
-        assertThat(version.isNMinorVersionsDiff(new Version("2.3.5"), 2)).isEqualTo(false);
-        assertThat(version.isNMinorVersionsDiff(new Version("2.3.9"), 2)).isEqualTo(false);
-        assertThat(version.isNMinorVersionsDiff(new Version("2.2"), 2)).isEqualTo(false);
+        private Version firstVersion;
+        private Version secondVersion;
+        private int minorVersionsDiff;
+        private boolean expected;
+
+        public ParameterizedTest_isNMinorVersionsDiff(String firstVersion, String secondVersion,
+                                                      int minorVersionsDiff, boolean expected)
+                                                                        throws ParseException {
+            this.firstVersion = new Version(firstVersion);
+            this.secondVersion = new Version(secondVersion);
+            this.minorVersionsDiff = minorVersionsDiff;
+            this.expected = expected;
+        }
+
+        @Test
+        public void test() throws ParseException {
+            assertThat(firstVersion.isNMinorVersionsDiff(secondVersion, minorVersionsDiff)).isEqualTo(expected);
+        }
     }
 }
