@@ -2,7 +2,6 @@ package org.edx.mobile.view.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,7 +32,9 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     private FragmentDialogRatingBinding binding;
 
     public static RatingDialogFragment newInstance() {
-        return new RatingDialogFragment();
+        RatingDialogFragment fragment = new RatingDialogFragment();
+        fragment.setCancelable(false);
+        return fragment;
     }
 
     @Override
@@ -41,7 +42,6 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(),
                 R.layout.fragment_dialog_rating, null, false);
         binding.ratingBar.setOnRatingBarChangeListener(this);
-        final Resources res = getResources();
         binding.tvDescription.setText(R.string.rating_dialog_message);
         mAlertDialog = new AlertDialog.Builder(getContext())
                 .setPositiveButton(getString(R.string.label_submit), new DialogInterface.OnClickListener() {
@@ -98,7 +98,6 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     }
 
     public void showRateTheAppDialog() {
-        final Resources res = getResources();
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.rate_app_dialog_title);
         builder.setMessage(ResourceUtil.getFormattedString(
