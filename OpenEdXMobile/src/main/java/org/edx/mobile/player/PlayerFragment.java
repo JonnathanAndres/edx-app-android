@@ -857,7 +857,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     player.getController().showSpecial( (getTouchExploreEnabled() ? 0L : 5000L) );
                 }
             }
-        } catch(Exception e) {
+        }catch(Exception e){
             logger.error(e);
         }
         if (environment.getConfig().isAppReviewsEnabled() &&
