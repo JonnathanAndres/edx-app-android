@@ -19,11 +19,11 @@ import org.edx.mobile.R;
 import java.util.List;
 
 /**
- * Utility class for updating the app.
+ * Utility class for app store related interactions in the app.
  */
-public final class AppUpdateUtils {
+public final class AppStoreUtils {
     // Make this class non-instantiable
-    private AppUpdateUtils() {
+    private AppStoreUtils() {
         throw new UnsupportedOperationException();
     }
 
@@ -49,7 +49,7 @@ public final class AppUpdateUtils {
     }
 
     /**
-     * Open a native app or a website on a web browser to update the app or for rating.
+     * Open a native app or a website on a web browser.
      *
      * @param context A Context for starting the new Activity.
      */

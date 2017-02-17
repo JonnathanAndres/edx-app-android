@@ -1,7 +1,6 @@
 package org.edx.mobile.util;
 
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -14,7 +13,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 /**
  * Tests for verifying implementation correctness of {@link Version}.
  */
-@RunWith(Enclosed.class)
 public class VersionTest {
     /**
      * Verify that a new instance created with a two-dot release string (x.x.x) is parsed
@@ -159,7 +157,7 @@ public class VersionTest {
      * Parameterize test cases class for {@link Version#isNMinorVersionsDiff(Version, int)} method,
      * method should return true if passed another instance with greater or equal minor versions
      * difference than the specified value.
-     * */
+     */
     @RunWith(Parameterized.class)
     public static class ParameterizedTest_isNMinorVersionsDiff {
         @Parameterized.Parameters
@@ -189,7 +187,7 @@ public class VersionTest {
 
         public ParameterizedTest_isNMinorVersionsDiff(String firstVersion, String secondVersion,
                                                       int minorVersionsDiff, boolean expected)
-                                                                        throws ParseException {
+                throws ParseException {
             this.firstVersion = new Version(firstVersion);
             this.secondVersion = new Version(secondVersion);
             this.minorVersionsDiff = minorVersionsDiff;

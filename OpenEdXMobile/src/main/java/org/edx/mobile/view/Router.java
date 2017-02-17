@@ -367,17 +367,23 @@ public class Router {
         activity.startActivity(WebViewActivity.newIntent(activity, url, title));
     }
 
-    public void showFeedbackScreen(FragmentActivity activity, String subject) {
-        String to = config.getFeedbackEmailAddress();
-
-        String osVersionText = String.format("%s %s", activity.getString(R.string.android_os_version),
-                android.os.Build.VERSION.RELEASE);
-        String appVersionText = String.format("%s %s", activity.getString(R.string.app_version),
-                BuildConfig.VERSION_NAME);
-        String deviceModelText = String.format("%s %s", activity.getString(R.string.android_device_model),
-                Build.MODEL);
-        String feedbackText = activity.getString(R.string.insert_feedback);
-        String body = osVersionText + "\n" + appVersionText + "\n" + deviceModelText + "\n\n" + feedbackText;
-        EmailUtil.openEmailClient(activity, to, subject, body, config);
+    /**
+     * Open an email client for user to write feedback
+     *
+     * @param activity Activity context
+     * @param subject  Subject of email
+     */
+    public void showFeedbackScreen(@NonNull FragmentActivity activity, @NonNull String subject) {
+        final String NEW_LINE = "\n";
+        final String to = config.getFeedbackEmailAddress();
+        StringBuilder body = new StringBuilder();
+        body.append(String.format("%s %s", activity.getString(R.string.android_os_version), android.os.Build.VERSION.RELEASE))
+                .append(NEW_LINE)
+                .append(String.format("%s %s", activity.getString(R.string.app_version), BuildConfig.VERSION_NAME))
+                .append(NEW_LINE)
+                .append(String.format("%s %s", activity.getString(R.string.android_device_model), Build.MODEL))
+                .append(NEW_LINE).append(NEW_LINE)
+                .append(activity.getString(R.string.insert_feedback));
+        EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
     }
 }

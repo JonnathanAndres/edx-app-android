@@ -18,7 +18,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.databinding.FragmentDialogRatingBinding;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.AppUpdateUtils;
+import org.edx.mobile.util.AppStoreUtils;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.Router;
 
 import roboguice.fragment.RoboDialogFragment;
@@ -41,8 +42,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
                 R.layout.fragment_dialog_rating, null, false);
         binding.ratingBar.setOnRatingBarChangeListener(this);
         final Resources res = getResources();
-        binding.tvDescription.setText(String.format(res.getString(R.string.rating_dialog_message),
-                res.getString(R.string.app_name)));
+        binding.tvDescription.setText(R.string.rating_dialog_message);
         mAlertDialog = new AlertDialog.Builder(getContext())
                 .setPositiveButton(getString(R.string.label_submit), new DialogInterface.OnClickListener() {
                     @Override
@@ -52,7 +52,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .setView(binding.getRoot())
-                .setCancelable(true)
+                .setCancelable(false)
                 .create();
         mAlertDialog.setOnShowListener(this);
         return mAlertDialog;
@@ -70,7 +70,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         // Persist rating and current version name
         PrefManager.UserPrefManager userPrefs = new PrefManager.UserPrefManager(MainApplication.application);
         userPrefs.setAppRating(binding.ratingBar.getRating());
-        userPrefs.setVersionWhenLastRated(BuildConfig.VERSION_NAME);
+        userPrefs.setLastRatedVersion(BuildConfig.VERSION_NAME);
         // Next action
         if (binding.ratingBar.getRating() <=3 ) {
             showFeedbackDialog(getActivity());
@@ -93,6 +93,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             }
         });
         builder.setNegativeButton(R.string.label_maybe_later, null);
+        builder.setCancelable(false);
         builder.create().show();
     }
 
@@ -100,16 +101,18 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         final Resources res = getResources();
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.rate_app_dialog_title);
-        builder.setMessage(String.format(res.getString(R.string.rate_app_dialog_message),
-                res.getString(R.string.app_name)));
+        builder.setMessage(ResourceUtil.getFormattedString(
+                getResources(), R.string.rate_app_dialog_message,
+                "platform_name", getString(R.string.platform_name)));
         builder.setPositiveButton(R.string.label_rate_the_app, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Open app in store for rating
-                AppUpdateUtils.openAppInAppStore(((Dialog) dialog).getContext());
+                AppStoreUtils.openAppInAppStore(((Dialog) dialog).getContext());
             }
         });
         builder.setNegativeButton(R.string.label_maybe_later, null);
+        builder.setCancelable(false);
         builder.create().show();
     }
 

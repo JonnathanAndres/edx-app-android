@@ -2,10 +2,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/dialog_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="@dimen/dialog_padding_material"
         android:paddingRight="@dimen/dialog_padding_material"
@@ -14,9 +14,8 @@
         <TextView
             android:id="@+id/tv_description"
             style="@style/regular_grey_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:text="@string/rating_dialog_message"
             android:textSize="@dimen/edx_large" />
 
@@ -24,7 +23,6 @@
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dialog_padding_material"
             android:numStars="5"
             android:stepSize="1.0" />
