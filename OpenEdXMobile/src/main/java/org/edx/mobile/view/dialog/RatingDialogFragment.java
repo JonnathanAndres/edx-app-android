@@ -32,9 +32,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
     private FragmentDialogRatingBinding binding;
 
     public static RatingDialogFragment newInstance() {
-        RatingDialogFragment fragment = new RatingDialogFragment();
-        fragment.setCancelable(false);
-        return fragment;
+        return new RatingDialogFragment();
     }
 
     @Override
@@ -52,8 +50,8 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .setView(binding.getRoot())
-                .setCancelable(false)
                 .create();
+        mAlertDialog.setCanceledOnTouchOutside(false);
         mAlertDialog.setOnShowListener(this);
         return mAlertDialog;
     }
@@ -93,8 +91,9 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             }
         });
         builder.setNegativeButton(R.string.label_maybe_later, null);
-        builder.setCancelable(false);
-        builder.create().show();
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     public void showRateTheAppDialog() {
@@ -111,8 +110,9 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
             }
         });
         builder.setNegativeButton(R.string.label_maybe_later, null);
-        builder.setCancelable(false);
-        builder.create().show();
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     @Override
