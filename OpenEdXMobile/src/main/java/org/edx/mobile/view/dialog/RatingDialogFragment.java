@@ -17,6 +17,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.databinding.FragmentDialogRatingBinding;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.Router;
@@ -70,7 +71,7 @@ public class RatingDialogFragment extends RoboDialogFragment implements AlertDia
         userPrefs.setAppRating(binding.ratingBar.getRating());
         userPrefs.setLastRatedVersion(BuildConfig.VERSION_NAME);
         // Next action
-        if (binding.ratingBar.getRating() <=3 ) {
+        if (binding.ratingBar.getRating() <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {
             showFeedbackDialog(getActivity());
         } else {
             showRateTheAppDialog();
