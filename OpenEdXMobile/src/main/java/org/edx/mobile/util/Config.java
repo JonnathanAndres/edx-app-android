@@ -443,10 +443,10 @@ public class Config {
     }
 
     /**
-     * @return A list of URIs for updating the app, or an empty list if none are available.
+     * @return A list of URIs of app stores, or an empty list if none are available.
      */
     @NonNull
-    public List<Uri> getAppUpdateUris() {
+    public List<Uri> getAppStoreUris() {
         //noinspection unchecked
         final List<String> uriStrings = getObjectOrNewInstance(APP_UPDATE_URIS, ArrayList.class);
         final List<Uri> uris = new ArrayList<>(uriStrings.size());

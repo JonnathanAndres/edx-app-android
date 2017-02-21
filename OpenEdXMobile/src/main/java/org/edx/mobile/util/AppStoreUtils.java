@@ -39,7 +39,7 @@ public final class AppStoreUtils {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         final PackageManager packageManager = context.getPackageManager();
-        for (final Uri uri : config.getAppUpdateUris()) {
+        for (final Uri uri : config.getAppStoreUris()) {
             intent.setData(uri);
             if (intent.resolveActivity(packageManager) != null) {
                 return true;
@@ -61,7 +61,7 @@ public final class AppStoreUtils {
          */
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        final List<Uri> uris = config.getAppUpdateUris();
+        final List<Uri> uris = config.getAppStoreUris();
         if (uris.isEmpty()) return;
 
         /* Try to resolve the app store that was initially used to

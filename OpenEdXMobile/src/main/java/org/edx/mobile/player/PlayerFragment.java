@@ -860,7 +860,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }catch(Exception e){
             logger.error(e);
         }
-        if (environment.getConfig().isAppReviewsEnabled() &&
+        if (!environment.getConfig().getAppStoreUris().isEmpty() &&
+                environment.getConfig().isAppReviewsEnabled() &&
                 NetworkUtil.isConnected(getContext())) {
             final PrefManager.UserPrefManager userPrefs = new PrefManager.UserPrefManager(MainApplication.application);
             final float appRating = userPrefs.getAppRating();
